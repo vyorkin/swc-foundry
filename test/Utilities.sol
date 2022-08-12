@@ -3,13 +3,15 @@ pragma solidity >=0.8.0;
 
 import {DSTest} from "ds-test/test.sol";
 import {Vm} from "forge-std/Vm.sol";
-import {stdStorage, StdStorage} from "forge-std/stdlib.sol";
+import {stdStorage, StdStorage} from "forge-std/Test.sol";
 
 interface IERC20 {
     function balanceOf(address) external view returns (uint256);
 }
 
 contract Utilities is DSTest {
+    uint256 public constant INITIAL_USER_BALANCE = 100 ether;
+
     Vm internal immutable vm = Vm(HEVM_ADDRESS);
     bytes32 internal nextUser = keccak256(abi.encodePacked("user address"));
     using stdStorage for StdStorage;
@@ -43,7 +45,7 @@ contract Utilities is DSTest {
         address payable[] memory users = new address payable[](userNum);
         for (uint256 i = 0; i < userNum; i++) {
             address payable user = this.getNextUserAddress();
-            vm.deal(user, 100 ether);
+            vm.deal(user, INITIAL_USER_BALANCE);
             users[i] = user;
         }
         return users;
